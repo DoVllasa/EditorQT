@@ -27,6 +27,14 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMinimumSize(QSize(50, 500))
+        self.actionopen = QAction(MainWindow)
+        self.actionopen.setObjectName(u"actionopen")
+        self.actionExit = QAction(MainWindow)
+        self.actionExit.setObjectName(u"actionExit")
+        self.actionshowTruth = QAction(MainWindow)
+        self.actionshowTruth.setObjectName(u"actionshowTruth")
+        self.actionOpen = QAction(MainWindow)
+        self.actionOpen.setObjectName(u"actionOpen")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
@@ -154,20 +162,13 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1340, 22))
-        self.menuFile = QMenu(self.menubar)
-        self.menuFile.setObjectName(u"menuFile")
-        self.menuTruth = QMenu(self.menubar)
-        self.menuTruth.setObjectName(u"menuTruth")
-        MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
-        self.menubar.addAction(self.menuFile.menuAction())
-        self.menubar.addAction(self.menuTruth.menuAction())
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 1340, 22))
+        MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
 
@@ -176,6 +177,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.actionopen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
+        self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.actionshowTruth.setText(QCoreApplication.translate("MainWindow", u"Show Truthdata", None))
+        self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"Open", None))
         self.backButton.setText(QCoreApplication.translate("MainWindow", u"<< Back", None))
         self.nextImageButton.setText(QCoreApplication.translate("MainWindow", u"Next >>", None))
         self.removeButton.setText(QCoreApplication.translate("MainWindow", u"remove", None))
@@ -186,7 +191,5 @@ class Ui_MainWindow(object):
         self.info.setText(QCoreApplication.translate("MainWindow", u"<<Info>>", None))
         self.label_5.setText("")
         self.directoryName.setText(QCoreApplication.translate("MainWindow", u"<<Directory Name>>", None))
-        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
-        self.menuTruth.setTitle(QCoreApplication.translate("MainWindow", u"Truth", None))
     # retranslateUi
 

@@ -31,12 +31,10 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
 
     def addPoint(self, p):
         self.mPoints.append(p)
-        # print('MPoints', self.m_points)
         self.setPolygon(QtGui.QPolygonF(self.mPoints))
         item = ImageView(self, len(self.mPoints) - 1)
         self.scene().addItem(item)
         self.mItems.append(item)
-        # print('MITEMS', self.m_items)
         item.setPos(p)
 
     def removeLastPoint(self):
@@ -46,7 +44,6 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
             it = self.mItems.pop()
             self.scene().removeItem(it)
             del it
-
 
     def movePoint(self, i, p):
         if 0 <= i < len(self.mPoints):
@@ -61,8 +58,6 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
             item.setEnabled(True)
 
     def itemChange(self, change, value):
-        # print('CHANGE', change)
-        # print('VALUE', value)
         if change == QtWidgets.QGraphicsItem.ItemPositionHasChanged:
             for i, point in enumerate(self.mPoints):
                 self.move_item(i, self.mapToScene(point))
@@ -96,52 +91,46 @@ class ImageScene(QGraphicsScene):
         self.imageItem = QtWidgets.QGraphicsPixmapItem()
         self.imageItem.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
         self.addItem(self.imageItem)
-        # print('ADDITEMIMAGE', self.imageItem)
         self.currentInstruction = Instructions.NoInstruction
         self.polygonItems = []
         self.imageName = ''
-        self.polyPoints = []
-        self.polyPointsGlobal = []
+        self.polygonPoints = []
+        self.allPolygonPointsFromImg = []
 
     def load_image(self, filename):
         self.imageItem.setPixmap(QtGui.QPixmap(filename))
         self.setSceneRect(self.imageItem.boundingRect())
         self.imageName = filename
-        if filename in imagePoly:
-            data = imagePoly[filename]
-            self.polyPointsGlobal = data
-            for i in data:
+        if filename in imagePolygon:
+            imagPolyData = imagePolygon[filename]
+            self.allPolygonPointsFromImg = imagPolyData
+            for i in imagPolyData:
                 self.polygonItem = PolygonAnnotation()
                 self.addItem(self.polygonItem)
                 self.polygonItems.append(self.polygonItem)
                 for k in i:
                     print('VALUE', k)
                     self.positionAddPoint(k)
-                    # self.setCurrentInstruction(Instructions.NoInstruction)
 
     def setCurrentInstruction(self, instruction):
         self.currentInstruction = instruction
         self.polygonItem = PolygonAnnotation()
         self.addItem(self.polygonItem)
         self.polygonItems.append(self.polygonItem)
-        if len(self.polyPoints) != 0:
-            self.polyPointsGlobal.append(self.polyPoints)
-            self.polyPoints = []
-        # print('ADDITEMPOLYGON', self.polygonItem.mItems)
+        if len(self.polygonPoints) != 0:
+            self.allPolygonPointsFromImg.append(self.polygonPoints)
+            self.polygonPoints = []
 
     def mousePressEvent(self, event):
         if self.currentInstruction == Instructions.PolygonInstruction:
             self.positionAddPoint(event.scenePos())
-            # print('SCENEPOSZWEI', event.scenePos())
         super(ImageScene, self).mousePressEvent(event)
 
     def positionAddPoint(self, position):
         self.polygonItem.removeLastPoint()
         self.polygonItem.addPoint(position)
-        # print('SCENEPOS', position)
-        # movable element
         self.polygonItem.addPoint(position)
-        self.polyPoints.append(position)
+        self.polygonPoints.append(position)
 
     def mouseMoveEvent(self, event):
         if self.currentInstruction == Instructions.PolygonInstruction:
@@ -149,25 +138,23 @@ class ImageScene(QGraphicsScene):
         super(ImageScene, self).mouseMoveEvent(event)
 
     def removePolygon(self):
-        addToImagePoly(self.polyPointsGlobal, self.imageName)
+        addToImagePoly(self.allPolygonPointsFromImg, self.imageName)
         for k in self.polygonItems:
             while len(k.mPoints) > 0:
                 k.removeLastPoint()
-            print('ITEMS', k)
             self.removeItem(k)
         self.polygonItems = []
-        self.polyPoints = []
-        self.polyPointsGlobal = []
+        self.polygonPoints = []
+        self.allPolygonPointsFromImg = []
         for i in self.selectedItems():
-            # print('test')
             self.removeItem(i)
 
 
+imagePolygon = {}
 
-imagePoly = {}
 
 def addToImagePoly(points: list, name: str):
-    imagePoly[name] = points
+    imagePolygon[name] = points
 
 
 class ImageView(QtWidgets.QGraphicsPathItem):
@@ -209,7 +196,7 @@ class ImageView(QtWidgets.QGraphicsPathItem):
         if change == QtWidgets.QGraphicsItem.ItemPositionChange and self.isEnabled():
             self.mAnnotationItem.movePoint(self.mIndex, value)
         return super(ImageView, self).itemChange(change, value)
-    
+
 
 class NextOrBack(Enum):
     BackItem = 0
@@ -231,16 +218,9 @@ class MainWindow(QMainWindow):
         self.mView = self.ui.imageView
         self.mScene = ImageScene(self)
         self.mView.setScene(self.mScene)
-        self.directory = '/Users/dominim/Desktop/TestData'
-        self.filenames = [f for f in listdir(self.directory) if isfile(join(os.path.realpath(self.directory), f))]
-        self.realpathImages = []
-        for index, filename in enumerate(self.filenames):
-            self.realpathImages.append(self.directory + '/' + filename)
-            self.ui.imageName.addItem(filename)
-        self.load_image(NextOrBack.BackItem)
-        self.ui.nextImageButton.clicked.connect(partial(self.load_image, NextOrBack.NextItem.value))
-        self.ui.backButton.clicked.connect(partial(self.load_image, NextOrBack.BackItem.value))
-        self.ui.removeButton.clicked.connect(self.mScene.removePolygon)
+        self.directory = ''
+        self.files = self.menuBar().addMenu("File").addAction("Open")
+        self.files.triggered.connect(self.getDirectory)
 
         QtWidgets.QShortcut(QtGui.QKeySequence.ZoomIn, self.mView, self.zoomIn)
         QtWidgets.QShortcut(QtGui.QKeySequence.ZoomOut, self.mView, self.zoomOut)
@@ -256,6 +236,24 @@ class MainWindow(QMainWindow):
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A), self.mView,
                             activated=partial(self.mScene.setCurrentInstruction, Instructions.PolygonInstruction))
 
+    def getDirectory(self):
+        self.directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Open directory",
+                                                                    QtCore.QStandardPaths.writableLocation(
+                                                                        QtCore.QStandardPaths.PicturesLocation))
+        self.filenames = [f for f in listdir(self.directory) if isfile(join(os.path.realpath(self.directory), f))]
+        self.realpathImages = []
+        for index, filename in enumerate(self.filenames):
+            self.realpathImages.append(self.directory + '/' + filename)
+            self.ui.imageName.addItem(filename)
+        self.load_image(NextOrBack.BackItem)
+        self.ui.nextImageButton.clicked.connect(partial(self.load_image, NextOrBack.NextItem.value))
+        self.ui.backButton.clicked.connect(partial(self.load_image, NextOrBack.BackItem.value))
+        self.ui.removeButton.clicked.connect(self.mScene.removePolygon)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), self.mView,
+                            activated=partial(self.load_image, NextOrBack.NextItem.value))
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), self.mView,
+                            activated=partial(self.load_image, NextOrBack.BackItem.value))
+
     @QtCore.Slot()
     def zoomIn(self):
         self.zoom(2)
@@ -269,8 +267,9 @@ class MainWindow(QMainWindow):
         if self.mView.scene() is not None:
             self.mView.centerOn(self.mView.scene().imageItem)
 
-    def showEvent(self, event:QtGui.QShowEvent):
+    def showEvent(self, event: QtGui.QShowEvent):
         self.mView.fitInView(self.mScene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+
 
     @QtCore.Slot()
     def load_image(self, imageNavigation):
