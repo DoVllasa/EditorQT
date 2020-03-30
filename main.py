@@ -23,6 +23,8 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges, True)
 
         self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.setBrush(QtGui.QColor(63, 136, 143, 100))
+
 
         self.mItems = []
 
@@ -64,12 +66,12 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
         return super(PolygonAnnotation, self).itemChange(change, value)
 
     def hoverEnterEvent(self, event):
-        self.setBrush(QtGui.QColor(255, 0, 0, 100))
+        self.setBrush(QtGui.QColor(63, 136, 143, 150))
         super(PolygonAnnotation, self).hoverEnterEvent(event)
 
-    def hoverLeaveEvent(self, event):
-        self.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
-        super(PolygonAnnotation, self).hoverLeaveEvent(event)
+    # def hoverLeaveEvent(self, event):
+    #     self.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
+    #     super(PolygonAnnotation, self).hoverLeaveEvent(event)
 
 
 class Instructions(Enum):
@@ -175,6 +177,7 @@ class ImageView(QtWidgets.QGraphicsPathItem):
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges, True)
         self.setAcceptHoverEvents(True)
+
         # self.setZValue(11)
         self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 

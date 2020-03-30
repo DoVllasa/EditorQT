@@ -76,45 +76,44 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addLayout(self.horizontalLayout, 2, 1, 1, 1)
 
-        self.imageName_2 = QLabel(self.centralwidget)
-        self.imageName_2.setObjectName(u"imageName_2")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.imageName_2.sizePolicy().hasHeightForWidth())
-        self.imageName_2.setSizePolicy(sizePolicy2)
-        self.imageName_2.setMinimumSize(QSize(0, 50))
+        sizePolicy2.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy2)
+        self.label_5.setMinimumSize(QSize(150, 0))
 
-        self.gridLayout.addWidget(self.imageName_2, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
 
-        self.amountParcels = QLabel(self.centralwidget)
-        self.amountParcels.setObjectName(u"amountParcels")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.imageName = QListWidget(self.centralwidget)
+        self.imageName.setObjectName(u"imageName")
+        sizePolicy2.setHeightForWidth(self.imageName.sizePolicy().hasHeightForWidth())
+        self.imageName.setSizePolicy(sizePolicy2)
+        self.imageName.setMinimumSize(QSize(150, 0))
+        self.imageName.setMaximumSize(QSize(150, 16777215))
+
+        self.gridLayout.addWidget(self.imageName, 1, 0, 1, 1)
+
+        self.directoryName = QLabel(self.centralwidget)
+        self.directoryName.setObjectName(u"directoryName")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.amountParcels.sizePolicy().hasHeightForWidth())
-        self.amountParcels.setSizePolicy(sizePolicy3)
+        sizePolicy3.setHeightForWidth(self.directoryName.sizePolicy().hasHeightForWidth())
+        self.directoryName.setSizePolicy(sizePolicy3)
+        self.directoryName.setMinimumSize(QSize(50, 0))
 
-        self.gridLayout.addWidget(self.amountParcels, 2, 2, 1, 1)
-
-        self.label_7 = QLabel(self.centralwidget)
-        self.label_7.setObjectName(u"label_7")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
-        self.label_7.setSizePolicy(sizePolicy4)
-        self.label_7.setMinimumSize(QSize(150, 0))
-
-        self.gridLayout.addWidget(self.label_7, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.directoryName, 0, 0, 1, 1)
 
         self.info = QLabel(self.centralwidget)
         self.info.setObjectName(u"info")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Maximum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.info.sizePolicy().hasHeightForWidth())
-        self.info.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Maximum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.info.sizePolicy().hasHeightForWidth())
+        self.info.setSizePolicy(sizePolicy4)
         self.info.setMinimumSize(QSize(50, 0))
 
         self.gridLayout.addWidget(self.info, 0, 2, 1, 1)
@@ -127,36 +126,77 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.imageView, 1, 1, 1, 1)
 
-        self.label_5 = QLabel(self.centralwidget)
-        self.label_5.setObjectName(u"label_5")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName(u"label")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy5)
+        self.label.setMinimumSize(QSize(0, 0))
+        self.label.setMaximumSize(QSize(16777215, 200))
+
+        self.verticalLayout.addWidget(self.label)
+
+        self.noneButton = QPushButton(self.centralwidget)
+        self.noneButton.setObjectName(u"noneButton")
+        self.noneButton.setFlat(False)
+
+        self.verticalLayout.addWidget(self.noneButton)
+
+        self.unknownButton = QPushButton(self.centralwidget)
+        self.unknownButton.setObjectName(u"unknownButton")
+
+        self.verticalLayout.addWidget(self.unknownButton)
+
+        self.transparentButton = QPushButton(self.centralwidget)
+        self.transparentButton.setObjectName(u"transparentButton")
+
+        self.verticalLayout.addWidget(self.transparentButton)
+
+        self.bagButton = QPushButton(self.centralwidget)
+        self.bagButton.setObjectName(u"bagButton")
+
+        self.verticalLayout.addWidget(self.bagButton)
+
+        self.boxButton = QPushButton(self.centralwidget)
+        self.boxButton.setObjectName(u"boxButton")
+
+        self.verticalLayout.addWidget(self.boxButton)
+
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy5.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy5)
+        self.label_2.setMaximumSize(QSize(16777215, 200))
+
+        self.verticalLayout.addWidget(self.label_2)
+
+
+        self.gridLayout.addLayout(self.verticalLayout, 1, 2, 1, 1)
+
+        self.imageName_2 = QLabel(self.centralwidget)
+        self.imageName_2.setObjectName(u"imageName_2")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         sizePolicy6.setHorizontalStretch(0)
         sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy6)
-        self.label_5.setMinimumSize(QSize(150, 0))
+        sizePolicy6.setHeightForWidth(self.imageName_2.sizePolicy().hasHeightForWidth())
+        self.imageName_2.setSizePolicy(sizePolicy6)
+        self.imageName_2.setMinimumSize(QSize(0, 50))
 
-        self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.imageName_2, 0, 1, 1, 1)
 
-        self.directoryName = QLabel(self.centralwidget)
-        self.directoryName.setObjectName(u"directoryName")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        self.amountParcels = QLabel(self.centralwidget)
+        self.amountParcels.setObjectName(u"amountParcels")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.directoryName.sizePolicy().hasHeightForWidth())
-        self.directoryName.setSizePolicy(sizePolicy7)
-        self.directoryName.setMinimumSize(QSize(50, 0))
+        sizePolicy7.setHeightForWidth(self.amountParcels.sizePolicy().hasHeightForWidth())
+        self.amountParcels.setSizePolicy(sizePolicy7)
 
-        self.gridLayout.addWidget(self.directoryName, 0, 0, 1, 1)
-
-        self.imageName = QListWidget(self.centralwidget)
-        self.imageName.setObjectName(u"imageName")
-        sizePolicy6.setHeightForWidth(self.imageName.sizePolicy().hasHeightForWidth())
-        self.imageName.setSizePolicy(sizePolicy6)
-        self.imageName.setMinimumSize(QSize(150, 0))
-        self.imageName.setMaximumSize(QSize(150, 16777215))
-
-        self.gridLayout.addWidget(self.imageName, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.amountParcels, 2, 2, 1, 1)
 
 
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
@@ -172,6 +212,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.noneButton.setDefault(False)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -185,11 +228,17 @@ class Ui_MainWindow(object):
         self.nextImageButton.setText(QCoreApplication.translate("MainWindow", u"Next >>", None))
         self.removeButton.setText(QCoreApplication.translate("MainWindow", u"remove", None))
         self.saveTruthButton.setText(QCoreApplication.translate("MainWindow", u"Save", None))
-        self.imageName_2.setText(QCoreApplication.translate("MainWindow", u"<<Image Name>>", None))
-        self.amountParcels.setText(QCoreApplication.translate("MainWindow", u"<<Amount Parcels>>", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Information", None))
-        self.info.setText(QCoreApplication.translate("MainWindow", u"<<Info>>", None))
         self.label_5.setText("")
         self.directoryName.setText(QCoreApplication.translate("MainWindow", u"<<Directory Name>>", None))
+        self.info.setText(QCoreApplication.translate("MainWindow", u"Categories", None))
+        self.label.setText("")
+        self.noneButton.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.unknownButton.setText(QCoreApplication.translate("MainWindow", u"Unkown", None))
+        self.transparentButton.setText(QCoreApplication.translate("MainWindow", u"Transparent bag", None))
+        self.bagButton.setText(QCoreApplication.translate("MainWindow", u"Bag", None))
+        self.boxButton.setText(QCoreApplication.translate("MainWindow", u"Box", None))
+        self.label_2.setText("")
+        self.imageName_2.setText(QCoreApplication.translate("MainWindow", u"<<Image Name>>", None))
+        self.amountParcels.setText(QCoreApplication.translate("MainWindow", u"<<Amount Parcels>>", None))
     # retranslateUi
 
