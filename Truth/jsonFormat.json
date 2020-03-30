@@ -33,19 +33,9 @@
       "class_type": "object"
     },
     {
-      "class_name": "transparent bag",
-      "color": "purple",
-      "class_type": "object"
-    },
-    {
       "class_name": "Box",
       "color": "orange",
       "class_type": "object"
-    },
-    {
-      "class_name": "Background",
-      "color": "brown",
-      "class_type": "background"
     }
   ],
   "items": [
@@ -70,7 +60,7 @@
       "content": {
         "labels": [
           {
-            "class_name": "Parcel",
+            "class_name": "Box",
             "polygon_coords": [
               [
                 100,
