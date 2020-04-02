@@ -109,8 +109,7 @@ class ImageScene(QGraphicsScene):
         self.polygonItems = []
         self.imageName = ''
         self.polygonPoints = []
-        self.allPolygonPointsFromImg = []
-        self.colorCodeList = {}
+        self.colorCodeDictonary = {}
         self.getColorOfPoly = []
         self.categorizedPolys = {}
 
@@ -120,42 +119,35 @@ class ImageScene(QGraphicsScene):
         self.imageName = filename
         if filename in imagePolygon:
             imagePolyData = imagePolygon[filename]
-            # self.allPolygonPointsFromImg = imagePolyData
-            self.colorCodeList = imagePolyData
-            if 0 in self.colorCodeList:
+            self.colorCodeDictonary = imagePolyData
+            if 0 in self.colorCodeDictonary:
                 self.createPoly(0)
-            if 1 in self.colorCodeList:
+            if 1 in self.colorCodeDictonary:
                 self.createPoly(1)
-            if 2 in self.colorCodeList:
+            if 2 in self.colorCodeDictonary:
                 self.createPoly(2)
-            if 3 in self.colorCodeList:
+            if 3 in self.colorCodeDictonary:
                 self.createPoly(3)
-            if 4 in self.colorCodeList:
+            if 4 in self.colorCodeDictonary:
                 self.createPoly(4)
 
     def createPoly(self, colorCode):
         # print('COLORCOLORCOLOR', self.colorCodeList[colorCode])
         self.categorizedPolys = {}
-        for i in self.colorCodeList[colorCode]:
+        for i in self.colorCodeDictonary[colorCode]:
             print('III', i)
             self.polygonItem = PolygonAnnotation()
             self.setPolygonColor(colorCode)
             self.addItem(self.polygonItem)
             self.polygonItems.append(self.polygonItem)
             for k in i:
-                self.polygonItem.removeLastPoint()
-                self.polygonItem.addPoint(k)
-                self.polygonItem.addPoint(k)
-                self.polygonPoints.append(k)
-                # print('VALUE', k)
-                # self.positionAddPoint(k)
-                # print('POINTSPOINTS', self.positionAddPoint(k))
+                self.positionAddPoint(k)
             if colorCode in self.categorizedPolys:
                 self.categorizedPolys[colorCode].append(i)
             else:
-                test = []
-                test.append(i)
-                self.categorizedPolys[colorCode] = test
+                createTmpListCoord = []
+                createTmpListCoord.append(i)
+                self.categorizedPolys[colorCode] = createTmpListCoord
             self.polygonPoints = []
         print('KATEGORIEN', self.categorizedPolys)
 
@@ -171,9 +163,7 @@ class ImageScene(QGraphicsScene):
         elif colorcode == 4:
             self.polygonItem.setBrush(QtGui.QColor(255, 0, 255, 150))
 
-
     def setCurrentInstruction(self, instruction, colorcode):
-            # print('PrintColor', colorcode)
             self.currentInstruction = instruction
             self.polygonItem = PolygonAnnotation()
             self.setPolygonColor(colorcode)
@@ -185,91 +175,27 @@ class ImageScene(QGraphicsScene):
 
             if len(self.polygonPoints) != 0 and len(self.getColorOfPoly) > 0:
                 if self.getColorOfPoly[0].getRgb() == QColor(255, 0, 0, 150).getRgb():
-                    if 0 not in self.colorCodeList:
-                        test = []
-                        test.append(self.polygonPoints)
-                        self.colorCodeList[0] = test
-                        # self.colorCodeList[0] = self.allPolygonPointsFromImg
-                    elif self.polygonPoints not in self.colorCodeList[0]:
-                        self.colorCodeList[0].append(self.polygonPoints)
-                        # self.colorCodeList[0].append(self.allPolygonPointsFromImg[0])
-
+                    self.onCreateColorList(0)
                 elif self.getColorOfPoly[0].getRgb() == QColor(255, 255, 0, 150).getRgb():
-                    if 1 not in self.colorCodeList:
-                        test = []
-                        test.append(self.polygonPoints)
-                        self.colorCodeList[1] = test
-                        # self.colorCodeList[0] = self.allPolygonPointsFromImg
-                    elif self.polygonPoints not in self.colorCodeList[0]:
-                        self.colorCodeList[1].append(self.polygonPoints)
+                    self.onCreateColorList(1)
                 elif self.getColorOfPoly[0].getRgb() == QColor(0, 255, 0, 150).getRgb():
-                    if 2 not in self.colorCodeList:
-                        test = []
-                        test.append(self.polygonPoints)
-                        self.colorCodeList[2] = test
-                        # self.colorCodeList[0] = self.allPolygonPointsFromImg
-                    elif self.polygonPoints not in self.colorCodeList[0]:
-                        self.colorCodeList[2].append(self.polygonPoints)
+                    self.onCreateColorList(2)
                 elif self.getColorOfPoly[0].getRgb() == QColor(0, 0, 255, 150).getRgb():
-                    if 3 not in self.colorCodeList:
-                        test = []
-                        test.append(self.polygonPoints)
-                        self.colorCodeList[3] = test
-                        # self.colorCodeList[0] = self.allPolygonPointsFromImg
-                    elif self.polygonPoints not in self.colorCodeList[0]:
-                        self.colorCodeList[3].append(self.polygonPoints)
+                    self.onCreateColorList(3)
                 elif self.getColorOfPoly[0].getRgb() == QColor(255, 0, 255, 150).getRgb():
-                    if 4 not in self.colorCodeList:
-                        test = []
-                        test.append(self.polygonPoints)
-                        self.colorCodeList[4] = test
-                        # self.colorCodeList[0] = self.allPolygonPointsFromImg
-                    elif self.polygonPoints not in self.colorCodeList[0]:
-                        self.colorCodeList[4].append(self.polygonPoints)
+                    self.onCreateColorList(4)
 
-                print('TESTTEST', self.colorCodeList)
-                self.allPolygonPointsFromImg = []
-                self.getColorOfPoly = []
-                self.polygonPoints = []
+                print('CODELIST', self.colorCodeDictonary)
 
-
-            # elif self.getColorOfPoly[0].getRgb() == QColor(255, 255, 0, 150).getRgb():
-                #     # self.allPolygonPointsFromImg.append(self.categorizedPolys[1])
-                #     self.allPolygonPointsFromImg.append(self.categorizedPolys[1])
-                #     if 1 not in self.colorCodeList:
-                #         self.colorCodeList[1] = self.allPolygonPointsFromImg
-                #     else:
-                #         self.colorCodeList[1].append(self.allPolygonPointsFromImg[0])
-                        # print('DICTONARYDICTCOLOR', self.colorCodeList[1])
-
-
-                # elif self.getColorOfPoly[0].getRgb() == QColor(0, 255, 0, 150).getRgb():
-                #     self.allPolygonPointsFromImg.append(self.polygonPoints)
-                #     if 2 not in self.colorCodeList:
-                #         self.colorCodeList[2] = self.allPolygonPointsFromImg
-                #     else:
-                #         self.colorCodeList[2].append(self.allPolygonPointsFromImg[0])
-                # elif self.getColorOfPoly[0].getRgb() == QColor(0, 0, 255, 150).getRgb():
-                #     self.allPolygonPointsFromImg.append(self.polygonPoints)
-                #     if 3 not in self.colorCodeList:
-                #         self.colorCodeList[3] = self.allPolygonPointsFromImg
-                #     else:
-                #         self.colorCodeList[3].append(self.allPolygonPointsFromImg[0])
-                # elif self.getColorOfPoly[0].getRgb() == QColor(255, 0, 255, 150).getRgb():
-                #     self.allPolygonPointsFromImg.append(self.polygonPoints)
-                #     if 4 not in self.colorCodeList:
-                #         self.colorCodeList[4] = self.allPolygonPointsFromImg
-                #     else:
-                #         self.colorCodeList[4].append(self.allPolygonPointsFromImg[0])‚
-                # self.colorCodeList = {}
-                # self.allPolygonPointsFromImg = []
-                # self.getColorOfPoly = []
-                #
-                # # self.allPolygonPointsFromImg.append(self.polygonPoints)
-                # self.polygonPoints = []
-            # print('ALLPOLYPOINTS', self.allPolygonPointsFromImg)
-            # print('Dictonary', self.colorCodeList)
-
+    def onCreateColorList(self, var):
+        if var not in self.colorCodeDictonary:
+            polyTmpPointsCoord = []
+            polyTmpPointsCoord.append(self.polygonPoints)
+            self.colorCodeDictonary[var] = polyTmpPointsCoord
+        elif self.polygonPoints not in self.colorCodeDictonary[var]:
+            self.colorCodeDictonary[var].append(self.polygonPoints)
+        self.getColorOfPoly = []
+        self.polygonPoints = []
 
     def mousePressEvent(self, event):
         if self.currentInstruction == Instructions.PolygonInstruction:
@@ -282,20 +208,13 @@ class ImageScene(QGraphicsScene):
         self.polygonItem.addPoint(position)
         self.polygonPoints.append(position)
 
-        # self.polygonItem.setBrush(QtGui.QColor(63, 136, 143, 150))
-       # print('POLY ', self.polygonItem.mItems)
-
     def mouseMoveEvent(self, event):
         if self.currentInstruction == Instructions.PolygonInstruction:
             self.polygonItem.movePoint(self.polygonItem.number_of_points() - 1, event.scenePos())
         super(ImageScene, self).mouseMoveEvent(event)
 
     def removePolygon(self):
-        # addToImagePoly(self.allPolygonPointsFromImg, self.imageName)
-        addToImagePoly(self.colorCodeList, self.imageName)
-        # print('ALLPOLYS', self.allPolygonPointsFromImg)
-        # print('ColorCode', self.colorCodeList)
-        # print('ImagePoly', imagePolygon)
+        addToImagePoly(self.colorCodeDictonary, self.imageName)
         for k in self.polygonItems:
             while len(k.mPoints) > 0:
                 k.removeLastPoint()
@@ -303,20 +222,14 @@ class ImageScene(QGraphicsScene):
         self.polygonItems = []
         self.polygonPoints = []
         self.allPolygonPointsFromImg = []
-        self.colorCodeList = {}
-        # print(self.colorCodeList)
+        self.colorCodeDictonary = {}
         for i in self.selectedItems():
             self.removeItem(i)
 
-
 imagePolygon = {}
 
-
-# def addToImagePoly(points: list, name: str):
-#    imagePolygon[name] = points
-
-def addToImagePoly(points: dict, name: str):
-    imagePolygon[name] = points
+def addToImagePoly(colorDict: dict, name: str):
+    imagePolygon[name] = colorDict
 
 
 class ImageView(QtWidgets.QGraphicsPathItem):
