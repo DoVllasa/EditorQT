@@ -36,11 +36,10 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
         self.mPoints.append(p)
         self.setPolygon(QtGui.QPolygonF(self.mPoints))
         item = ImageView(self, len(self.mPoints) - 1)
-        item.setScale(0.5)
+        item.setScale(0.3)
         self.scene().addItem(item)
         self.mItems.append(item)
         item.setPos(p)
-        print('test')
 
     def removeLastPoint(self):
         if self.mPoints:
