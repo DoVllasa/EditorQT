@@ -2,7 +2,7 @@ import sys
 from enum import Enum
 from functools import partial
 
-from PyQt5.QtGui import QColor
+from PySide2.QtGui import QColor
 from PySide2 import QtWidgets, QtGui, QtCore
 from PySide2.QtCore import SIGNAL, QObject
 from PySide2.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QPushButton
@@ -36,9 +36,11 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
         self.mPoints.append(p)
         self.setPolygon(QtGui.QPolygonF(self.mPoints))
         item = ImageView(self, len(self.mPoints) - 1)
+        item.setScale(0.5)
         self.scene().addItem(item)
         self.mItems.append(item)
         item.setPos(p)
+        print('test')
 
     def removeLastPoint(self):
         if self.mPoints:
@@ -290,7 +292,8 @@ class MainWindow(QMainWindow):
         self.mView = self.ui.imageView
         self.mScene = ImageScene(self)
         self.mView.setScene(self.mScene)
-        self.directory = '/Users/dominim/Desktop/TestData'
+        # self.directory = '/Users/dominim/Desktop/TestData'
+        self.directory = '/home/dominim/Desktop/Data/wa1122/wa1122/png_rgb/t000'
         self.filenames = [f for f in listdir(self.directory) if isfile(join(os.path.realpath(self.directory), f))]
         self.realpathImages = []
         for index, filename in enumerate(self.filenames):
