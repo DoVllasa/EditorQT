@@ -12,11 +12,60 @@ import os
 from os.path import isfile, join
 import itertools
 
+# #-----------------------------------------------------------------------------------------------------------------------
+# #   GetPolygonAnnotations
+# # -----------------------------------------------------------------------------------------------------------------------
+
+class PolygonItemsDisplay(QtWidgets.QGraphicsPathItem):
+    circle = QtGui.QPainterPath()
+    circle.addEllipse(QtCore.QRectF(-10, -10, 20, 20))
+    square = QtGui.QPainterPath()
+    square.addRect(QtCore.QRectF(-15, -15, 30, 30))
+
+    def __init__(self, annotationItem, index):
+        super(PolygonItemsDisplay, self).__init__()
+        self.mAnnotationItem = annotationItem
+        # print("ANNOTATIONITEM", self.mAnnotationItem)
+        self.mIndex = index
+        self.setPath(PolygonItemsDisplay.circle)
+        self.setBrush(QtGui.QColor("blue"))
+        self.setPen(QtGui.QPen(QtGui.QColor("blue"), 2))
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges, True)
+        self.setAcceptHoverEvents(True)
+
+        self.setZValue(11)
+        self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+
+    def hoverEnterEvent(self, event):
+        self.setPath(PolygonItemsDisplay.square)
+        self.setBrush(QtGui.QColor("blue"))
+        super(PolygonItemsDisplay, self).hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        self.setPath(PolygonItemsDisplay.circle)
+        self.setBrush(QtGui.QColor("blue"))
+        super(PolygonItemsDisplay, self).hoverLeaveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self.setSelected(False)
+        super(PolygonItemsDisplay, self).mouseReleaseEvent(event)
+
+    def itemChange(self, change, value):
+        if change == QtWidgets.QGraphicsItem.ItemPositionChange and self.isEnabled():
+            self.mAnnotationItem.movePoint(self.mIndex, value)
+        return super(PolygonItemsDisplay, self).itemChange(change, value)
+
+# #-----------------------------------------------------------------------------------------------------------------------
+# #   PolygonAnnotation
+# # -----------------------------------------------------------------------------------------------------------------------
+
 class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
     def __init__(self, parent=None):
         super(PolygonAnnotation, self).__init__(parent)
         self.mPoints = []
-        # self.setZValue(10)
+        self.setZValue(10)
         self.setPen(QtGui.QPen(QtGui.QColor("blue"), 2))
         self.setAcceptHoverEvents(True)
 
@@ -35,7 +84,7 @@ class PolygonAnnotation(QtWidgets.QGraphicsPolygonItem):
     def addPoint(self, p):
         self.mPoints.append(p)
         self.setPolygon(QtGui.QPolygonF(self.mPoints))
-        item = ImageView(self, len(self.mPoints) - 1)
+        item = PolygonItemsDisplay(self, len(self.mPoints) - 1)
         item.setScale(0.3)
         self.scene().addItem(item)
         self.mItems.append(item)
@@ -85,22 +134,13 @@ class Instructions(Enum):
     PolygonInstruction = 1
     BackItem = 0
     NextItem = 1
-    Red = 0
-    Yellow = 1
-    Green = 2
-    Blue = 3
-    Pink = 4
+
+# #-----------------------------------------------------------------------------------------------------------------------
+# #   ImageScene
+# # -----------------------------------------------------------------------------------------------------------------------
 
 
-class ImageWithPolygon:
-    def __init__(self, parent=None):
-        super(ImageWithPolygon, self).__init__(parent)
-        self.imagItem = QtWidgets.QGraphicsPixmapItem()
-        self.polygonItem = PolygonAnnotation()
-        self.imagePolygone = dict()
-
-
-class ImageScene(QGraphicsScene):
+class ImageScene(QtWidgets.QGraphicsScene):
     def __init__(self, parent=None):
         super(ImageScene, self).__init__(parent)
         self.imageItem = QtWidgets.QGraphicsPixmapItem()
@@ -131,6 +171,10 @@ class ImageScene(QGraphicsScene):
                 self.createPoly(3)
             if 4 in self.colorCodeDictonary:
                 self.createPoly(4)
+            if 5 in self.colorCodeDictonary:
+                self.createPoly(5)
+            if 6 in self.colorCodeDictonary:
+                self.createPoly(6)
 
     def createPoly(self, colorCode):
         # print('COLORCOLORCOLOR', self.colorCodeList[colorCode])
@@ -156,12 +200,16 @@ class ImageScene(QGraphicsScene):
         if colorcode == 0:
             self.polygonItem.setBrush(QtGui.QColor(255, 0, 0, 150))
         elif colorcode == 1:
-            self.polygonItem.setBrush(QtGui.QColor(255, 255, 0, 150))
+            self.polygonItem.setBrush(QtGui.QColor(0, 0, 255, 150))
         elif colorcode == 2:
             self.polygonItem.setBrush(QtGui.QColor(0, 255, 0, 150))
         elif colorcode == 3:
-            self.polygonItem.setBrush(QtGui.QColor(0, 0, 255, 150))
+            self.polygonItem.setBrush(QtGui.QColor(255, 127, 36, 150))
         elif colorcode == 4:
+            self.polygonItem.setBrush(QtGui.QColor(155, 48, 255, 150))
+        elif colorcode == 5:
+            self.polygonItem.setBrush(QtGui.QColor(0, 191, 255, 150))
+        elif colorcode == 6:
             self.polygonItem.setBrush(QtGui.QColor(255, 0, 255, 150))
 
     def setCurrentInstruction(self, instruction, colorcode):
@@ -177,14 +225,19 @@ class ImageScene(QGraphicsScene):
             if len(self.polygonPoints) != 0 and len(self.getColorOfPoly) > 0:
                 if self.getColorOfPoly[0].getRgb() == QColor(255, 0, 0, 150).getRgb():
                     self.onCreateColorList(0)
-                elif self.getColorOfPoly[0].getRgb() == QColor(255, 255, 0, 150).getRgb():
+                elif self.getColorOfPoly[0].getRgb() == QColor(0, 0, 255, 150).getRgb():
                     self.onCreateColorList(1)
                 elif self.getColorOfPoly[0].getRgb() == QColor(0, 255, 0, 150).getRgb():
                     self.onCreateColorList(2)
-                elif self.getColorOfPoly[0].getRgb() == QColor(0, 0, 255, 150).getRgb():
+                elif self.getColorOfPoly[0].getRgb() == QColor(255, 127, 36, 150).getRgb():
                     self.onCreateColorList(3)
-                elif self.getColorOfPoly[0].getRgb() == QColor(255, 0, 255, 150).getRgb():
+                elif self.getColorOfPoly[0].getRgb() == QColor(155, 48, 255, 150).getRgb():
                     self.onCreateColorList(4)
+                elif self.getColorOfPoly[0].getRgb() == QColor(0, 191, 255, 150).getRgb():
+                    self.onCreateColorList(5)
+                elif self.getColorOfPoly[0].getRgb() == QColor(255, 0, 255, 150).getRgb():
+                    self.onCreateColorList(6)
+
 
                 print('CODELIST', self.colorCodeDictonary)
 
@@ -233,47 +286,14 @@ def addToImagePoly(colorDict: dict, name: str):
     imagePolygon[name] = colorDict
 
 
-class ImageView(QtWidgets.QGraphicsPathItem):
-    circle = QtGui.QPainterPath()
-    circle.addEllipse(QtCore.QRectF(-10, -10, 20, 20))
-    square = QtGui.QPainterPath()
-    square.addRect(QtCore.QRectF(-15, -15, 30, 30))
-
-    def __init__(self, annotationItem, index):
-        super(ImageView, self).__init__()
-        self.mAnnotationItem = annotationItem
-        # print("ANNOTATIONITEM", self.mAnnotationItem)
-        self.mIndex = index
-        self.setPath(ImageView.circle)
-        self.setBrush(QtGui.QColor("blue"))
-        self.setPen(QtGui.QPen(QtGui.QColor("blue"), 2))
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges, True)
-        self.setAcceptHoverEvents(True)
-
-        # self.setZValue(11)
-        self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-
-    def hoverEnterEvent(self, event):
-        self.setPath(ImageView.square)
-        self.setBrush(QtGui.QColor("blue"))
-        super(ImageView, self).hoverEnterEvent(event)
-
-    def hoverLeaveEvent(self, event):
-        self.setPath(ImageView.circle)
-        self.setBrush(QtGui.QColor("blue"))
-        super(ImageView, self).hoverLeaveEvent(event)
-
-    def mouseReleaseEvent(self, event):
-        self.setSelected(False)
-        super(ImageView, self).mouseReleaseEvent(event)
-
-    def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.ItemPositionChange and self.isEnabled():
-            self.mAnnotationItem.movePoint(self.mIndex, value)
-        return super(ImageView, self).itemChange(change, value)
-
+class Categorization(Enum):
+    Red = 0
+    Blue = 1
+    Green = 2
+    Orange = 3
+    Purple = 4
+    LightBlue = 5
+    Pink = 6
 
 class MainWindow(QMainWindow):
     factor = 2.0
@@ -291,8 +311,8 @@ class MainWindow(QMainWindow):
         self.mView = self.ui.imageView
         self.mScene = ImageScene(self)
         self.mView.setScene(self.mScene)
-        # self.directory = '/Users/dominim/Desktop/TestData'
-        self.directory = '/home/dominim/Desktop/Data/wa1122/wa1122/png_rgb/t000'
+        self.directory = '/Users/dominim/Desktop/TestData'
+        # self.directory = '/home/dominim/Desktop/Data/wa1122/wa1122/png_rgb/t000'
         self.filenames = [f for f in listdir(self.directory) if isfile(join(os.path.realpath(self.directory), f))]
         self.realpathImages = []
         for index, filename in enumerate(self.filenames):
@@ -311,17 +331,25 @@ class MainWindow(QMainWindow):
         # self.files = self.menuBar().addMenu("File").addAction("Open")
         # self.files.triggered.connect(self.getDirectory)
 
-        self.ui.boxButton.setStyleSheet("color: #FF0000")
-        self.ui.bagButton.setStyleSheet("color: #FFFF00")
-        self.ui.transparentButton.setStyleSheet("color: #00FF00")
-        self.ui.unknownButton.setStyleSheet("color: #0000FF")
-        self.ui.noneButton.setStyleSheet("color: #FF00FF")
+#-----------------------------------------------------------------------------------------------------------------------
+#   Set Color of Buttons with colorcode
+# -----------------------------------------------------------------------------------------------------------------------
 
-        self.ui.boxButton.clicked.connect(partial(self.setColorCode, Instructions.Red.value))
-        self.ui.bagButton.clicked.connect(partial(self.setColorCode, Instructions.Yellow.value))
-        self.ui.transparentButton.clicked.connect(partial(self.setColorCode, Instructions.Green.value))
-        self.ui.unknownButton.clicked.connect(partial(self.setColorCode, Instructions.Blue.value))
-        self.ui.noneButton.clicked.connect(partial(self.setColorCode, Instructions.Pink.value))
+        self.ui.boxButton.setStyleSheet("color: #FF0000")# Red 255, 0, 0
+        self.ui.bagButton.setStyleSheet("color: #0000FF")# blue 0, 0, 255
+        self.ui.pouchButton.setStyleSheet("color: #00FF00")# Green 0, 255, 0
+        self.ui.unknownButton.setStyleSheet("color: #FF7F24")# orange 255, 127, 36
+        self.ui.restButton.setStyleSheet("color: #9B30FF")# purple 155, 48, 255
+        self.ui.flatButton.setStyleSheet("color: #00BFFF")# Lightblue 0, 191, 255
+        self.ui.armButton.setStyleSheet("color: #FF00FF")# pink 255, 0 ,255
+
+        self.ui.boxButton.clicked.connect(partial(self.setColorCode, Categorization.Red.value))
+        self.ui.bagButton.clicked.connect(partial(self.setColorCode, Categorization.Blue.value))
+        self.ui.pouchButton.clicked.connect(partial(self.setColorCode, Categorization.Green.value))
+        self.ui.unknownButton.clicked.connect(partial(self.setColorCode, Categorization.Orange.value))
+        self.ui.restButton.clicked.connect(partial(self.setColorCode, Categorization.Purple.value))
+        self.ui.flatButton.clicked.connect(partial(self.setColorCode, Categorization.LightBlue.value))
+        self.ui.armButton.clicked.connect(partial(self.setColorCode, Categorization.Pink.value))
 
         QtWidgets.QShortcut(QtGui.QKeySequence.ZoomIn, self.mView, self.zoomIn)
         QtWidgets.QShortcut(QtGui.QKeySequence.ZoomOut, self.mView, self.zoomOut)
@@ -340,7 +368,6 @@ class MainWindow(QMainWindow):
         self.colorNum = code
         # print(self.colorNum)
         self.mScene.setCurrentInstruction(Instructions.PolygonInstruction, self.colorNum)
-
 
     # def getDirectory(self):
     #     self.directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Open directory",

@@ -205,9 +205,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="noneButton">
+         <widget class="QPushButton" name="armButton">
           <property name="text">
-           <string>None</string>
+           <string>Arm</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="unknownButton">
+          <property name="text">
+           <string>Unkown</string>
           </property>
           <property name="default">
            <bool>false</bool>
@@ -218,16 +225,23 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="unknownButton">
+         <widget class="QPushButton" name="restButton">
           <property name="text">
-           <string>Unkown</string>
+           <string>Rest (Trash)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="transparentButton">
+         <widget class="QPushButton" name="flatButton">
           <property name="text">
-           <string>Transparent bag</string>
+           <string>Flat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pouchButton">
+          <property name="text">
+           <string>Pouch</string>
           </property>
          </widget>
         </item>

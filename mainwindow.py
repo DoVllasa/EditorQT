@@ -140,21 +140,31 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label)
 
-        self.noneButton = QPushButton(self.centralwidget)
-        self.noneButton.setObjectName(u"noneButton")
-        self.noneButton.setFlat(False)
+        self.armButton = QPushButton(self.centralwidget)
+        self.armButton.setObjectName(u"armButton")
 
-        self.verticalLayout.addWidget(self.noneButton)
+        self.verticalLayout.addWidget(self.armButton)
 
         self.unknownButton = QPushButton(self.centralwidget)
         self.unknownButton.setObjectName(u"unknownButton")
+        self.unknownButton.setFlat(False)
 
         self.verticalLayout.addWidget(self.unknownButton)
 
-        self.transparentButton = QPushButton(self.centralwidget)
-        self.transparentButton.setObjectName(u"transparentButton")
+        self.restButton = QPushButton(self.centralwidget)
+        self.restButton.setObjectName(u"restButton")
 
-        self.verticalLayout.addWidget(self.transparentButton)
+        self.verticalLayout.addWidget(self.restButton)
+
+        self.flatButton = QPushButton(self.centralwidget)
+        self.flatButton.setObjectName(u"flatButton")
+
+        self.verticalLayout.addWidget(self.flatButton)
+
+        self.pouchButton = QPushButton(self.centralwidget)
+        self.pouchButton.setObjectName(u"pouchButton")
+
+        self.verticalLayout.addWidget(self.pouchButton)
 
         self.bagButton = QPushButton(self.centralwidget)
         self.bagButton.setObjectName(u"bagButton")
@@ -212,7 +222,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.noneButton.setDefault(False)
+        self.unknownButton.setDefault(False)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -232,9 +242,11 @@ class Ui_MainWindow(object):
         self.directoryName.setText(QCoreApplication.translate("MainWindow", u"<<Directory Name>>", None))
         self.info.setText(QCoreApplication.translate("MainWindow", u"Categories", None))
         self.label.setText("")
-        self.noneButton.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.armButton.setText(QCoreApplication.translate("MainWindow", u"Arm", None))
         self.unknownButton.setText(QCoreApplication.translate("MainWindow", u"Unkown", None))
-        self.transparentButton.setText(QCoreApplication.translate("MainWindow", u"Transparent bag", None))
+        self.restButton.setText(QCoreApplication.translate("MainWindow", u"Rest (Trash)", None))
+        self.flatButton.setText(QCoreApplication.translate("MainWindow", u"Flat", None))
+        self.pouchButton.setText(QCoreApplication.translate("MainWindow", u"Pouch", None))
         self.bagButton.setText(QCoreApplication.translate("MainWindow", u"Bag", None))
         self.boxButton.setText(QCoreApplication.translate("MainWindow", u"Box", None))
         self.label_2.setText("")
